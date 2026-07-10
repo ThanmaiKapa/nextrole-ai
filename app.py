@@ -2,9 +2,11 @@ import streamlit as st
 
 from langchain_ollama import ChatOllama
 
-from utils.file_reader import extract_text
+from views.home import show_home
+from views.ats_analyzer import show_ats
+from views.master_profile import show_master_profile
 
-from modules.analyzer import analyze_resume
+from utils.session_state import initialize_session_state
 
 llm = ChatOllama(model="llama3.2")
 
@@ -14,61 +16,24 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🚀 NextRole AI")
+initialize_session_state()
 
-st.caption("Your AI-powered career assistant.")
+st.sidebar.title("🚀 NextRole AI")
 
-st.divider()
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "🏠 Home",
+        "📄 ATS Analyzer",
+        "👤 Master Profile"
+    ]
+)
 
-st.caption("Powered by Llama 3.2 • LangChain • Ollama")
+if page == "🏠 Home":
+    show_home()
 
-col1, col2 = st.columns(2)
+elif page == "📄 ATS Analyzer":
+    show_ats(llm)
 
-with col1:
-    uploaded_file = st.file_uploader(
-        "Upload your Resume",
-        type=["pdf", "docx"]
-    )
-    if uploaded_file is not None:
-        st.success("✅ Resume uploaded successfully")
-resume_text = ""
-if uploaded_file:
-    resume_text = extract_text(uploaded_file)
-
-with col2:
-    job_description = st.text_area(
-        "Paste Job Description",
-        height=250
-    )
-    if job_description.strip():
-        st.success("✅ Job description added")
-
-left, center, right = st.columns([1, 2, 1])
-
-with center:
-    analyze = st.button("🔍 Analyze Resume", use_container_width=True)
-
-if analyze:
-
-    if uploaded_file is None:
-        st.warning("Please upload your resume first.")
-
-    elif not job_description.strip():
-        st.warning("Please paste the job description.")
-
-    else:
-
-        with st.spinner("Analyzing Resume..."):
-            analysis_result = analyze_resume(llm, resume_text, job_description)
-
-        st.divider()
-        st.subheader("📊 Analysis Result")
-        st.markdown(analysis_result)
-
-if uploaded_file:
-    with st.expander("View Extracted Resume"):
-        st.text_area(
-            "Resume",
-            resume_text,
-            height=300
-            )
+elif page == "👤 Master Profile":
+    show_master_profile()
