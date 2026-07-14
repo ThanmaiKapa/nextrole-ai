@@ -1,0 +1,113 @@
+{
+    "personal_information": {
+        "full_name": "Thanmai",
+        "email": "thanmai@gmail.com",
+        "phone": "0123456789",
+        "location": "Sample",
+        "linkedin": "https://www.linkedin.com/in/thanmai-kapa/",
+        "github": "https://github.com/ThanmaiKapa",
+        "portfolio": "Sample",
+        "summary": "Computer Science graduate (2023) with strong analytical, leadership, and teamwork skills, and over one year of experience as a Data Analyst. Proficient in Python, SQL, Microsoft Fabric and Power BI for data analysis, visualization, and reporting. Adept at transforming raw data into actionable insights to support strategic decision-making in techdriven environments. "
+    },
+    "education": [
+        {
+            "level": "Bachelor's",
+            "institution": "Sir C R Reddy College of Engineering",
+            "board_university": "JNTUK",
+            "specialization": "Computer Science",
+            "score": "7.9",
+            "score_type": "CGPA",
+            "start_year": "2019",
+            "end_year": "2023"
+        },
+        {
+            "level": "Intermediate",
+            "institution": "Sri Chaitanya junior college",
+            "board_university": "BIEAP",
+            "specialization": "MPC",
+            "score": "9.7",
+            "score_type": "CGPA",
+            "start_year": "2017",
+            "end_year": "2019"
+        },
+        {
+            "level": "SSC",
+            "institution": "Bhashyam",
+            "board_university": "BSEAP",
+            "specialization": "",
+            "score": "9.5",
+            "score_type": "CGPA",
+            "start_year": "2016",
+            "end_year": "2017"
+        }
+    ],
+    "experience": [
+        {
+            "company": "Intellectra AI Soluctions",
+            "role": "Data Analyst",
+            "location": "Hyderabad",
+            "employment_type": "Full-time",
+            "start_date": "2025-08-04",
+            "currently_working": true,
+            "end_date": null,
+            "description": [
+                "Analyzing business and customer data using Python, SQL, Microsoft Fabric, and Power BI to deliver datadriven insights, semantic models, and interactive dashboards."
+            ]
+        }
+    ],
+    "skills": {
+        "programming_languages": [
+            "Python",
+            "SQL",
+            "Machine learning/AI"
+        ],
+        "frameworks": [
+            "Langchain"
+        ],
+        "databases": [
+            "SQL server",
+            "Datawarehousing",
+            "one lake"
+        ],
+        "cloud": [
+            "Microsoft Fabric"
+        ],
+        "tools": [
+            "Power BI",
+            "VS code",
+            "Tableau",
+            "Excel"
+        ],
+        "soft_skills": [
+            "Communication",
+            "Problem-Solving"
+        ]
+    },
+    "projects": [
+        {
+            "title": "Nextrole AI",
+            "project_type": "Personal",
+            "technologies": [
+                "Python",
+                "Langchain",
+                "streamlit",
+                "Ollama",
+                "llama 3.2"
+            ],
+            "description": [
+                "An AI-powered career assistant built with Streamlit, LangChain, Ollama, and Llama 3.2.",
+                "NextRole AI helps users analyze resumes against job descriptions, maintain a reusable Master Profile, and lays the foundation for AI-powered resume generation, cover letter creation, and interview preparation."
+            ],
+            "github": ""
+        }
+    ],
+    "certifications": [
+        {
+            "name": "Advanced certification course in Data Analytics with AI",
+            "issuer": "ExcellenC via certifyme",
+            "issue_date": "2024-05-26",
+            "expiration_date": null,
+            "credential_url": "https://credential.certifyme.online/verify/3725970f10630"
+        }
+    ]
+}

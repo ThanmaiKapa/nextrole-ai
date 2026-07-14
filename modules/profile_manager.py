@@ -58,3 +58,7 @@ def update_profile(section, data):
     profile[section] = data
 
     save_profile(profile)
+    
+    # Regenerate embeddings after saving
+    from modules.embedding_manager import update_profile_embeddings
+    update_profile_embeddings()

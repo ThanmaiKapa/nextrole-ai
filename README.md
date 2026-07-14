@@ -39,6 +39,15 @@ NextRole AI aims to solve this problem by analyzing a resume against a job descr
 - Input validation
 - JSON-based local storage
 
+### 🧠 Embeddings & Semantic Search
+
+- Convert Master Profile into meaningful text chunks
+- Generate embeddings using nomic-embed-text
+- Automatically regenerate embeddings whenever the profile is updated
+- Store profile embeddings locally
+- Semantic similarity search using cosine similarity
+- Retrieve the most relevant profile information for a job description
+
 ### ⚡ General
 - Runs completely locally using Ollama
 - No OpenAI API required
@@ -61,6 +70,7 @@ NextRole AI runs entirely on a local Llama 3.2 model through Ollama. This allows
 | Backend | Python |
 | AI Framework | LangChain |
 | LLM | Llama 3.2 |
+| Embedding Model | nomic-embed-text|
 | Local Runtime | Ollama |
 | Document Parsing | pypdf, python-docx |
 | IDE | VS Code |
@@ -71,8 +81,10 @@ NextRole AI runs entirely on a local Llama 3.2 model through Ollama. This allows
 NextRole_AI/
 │
 ├── app.py
+│
 ├── data/
-│   └── master_profile.json
+│   ├── master_profile.json
+│   └── profile_embeddings.json
 │
 ├── forms/
 │   ├── personal_information_form.py
@@ -84,13 +96,10 @@ NextRole_AI/
 │
 ├── modules/
 │   ├── analyzer.py
-│   └── profile_manager.py
-│
-├── views/
-│   ├── home.py
-│   ├── ats_analyzer.py
-│   ├── master_profile.py
-│   └── profile_view.py
+│   ├── chunk_manager.py
+│   ├── embedding_manager.py
+│   ├── profile_manager.py
+│   └── similarity_manager.py
 │
 ├── prompts/
 │   └── ats_prompt.py
@@ -98,6 +107,14 @@ NextRole_AI/
 ├── utils/
 │   ├── file_reader.py
 │   └── session_state.py
+│
+├── views/
+│   ├── ats_analyzer.py
+│   ├── home.py
+│   ├── master_profile.py
+│   └── profile_view.py
+│
+├── images/
 │
 ├── requirements.txt
 ├── README.md
@@ -149,6 +166,7 @@ Visit **https://ollama.com** to Install
 7. Pull Llama 3.2
 ```bash
 ollama pull llama3.2
+ollama pull nomic-embed-text
 ```
 8. Run the application
 ```bash
@@ -212,16 +230,16 @@ streamlit run app.py
  Extract Resume Text      Save Professional Details
           │                         │
           ▼                         ▼
-Paste Job Description      Store in JSON Database
+Paste Job Description      Store Master Profile (JSON)
           │                         │
           ▼                         ▼
-    Build ATS Prompt       View / Update Profile
-          │
-          ▼
-      LangChain
-          │
-          ▼
-       Ollama
+    Build ATS Prompt        Generate Profile Chunks
+          │                         │
+          ▼                         ▼
+      LangChain             Generate Embeddings
+          │                         │
+          ▼                         ▼
+       Ollama              Store Embeddings (JSON)
           │
           ▼
       Llama 3.2
@@ -237,7 +255,7 @@ Paste Job Description      Store in JSON Database
 
 - [x] Version 1.0 - ATS Resume Analyzer
 - [x] Version 2.0 - Master Profile
-- [ ] Version 3.0 - Embeddings
+- [x] Version 3.0 - Embeddings
 - [ ] Version 4.0 - ChromaDB
 - [ ] Version 5.0 - RAG
 - [ ] Version 6.0 - AI Resume Generator
@@ -248,13 +266,12 @@ Paste Job Description      Store in JSON Database
 
 🚧 Active Development
 
-Current Version: **v2.0**
+Current Version: **v3.0**
 
-The project currently includes an ATS Resume Analyzer and a reusable Master Profile. Upcoming versions will introduce Embeddings, ChromaDB, Retrieval-Augmented Generation (RAG), AI Resume Generation, Cover Letter Generation, and Interview Preparation.
+The project currently includes an ATS Resume Analyzer, Master Profile, automatic profile embedding generation, and semantic similarity search. Upcoming versions will introduce ChromaDB, Retrieval-Augmented Generation (RAG), AI Resume Generation, Cover Letter Generation, and Interview Preparation.
 
 ## Future Enhancements
 
-- Resume Embedding Generation
 - ChromaDB Vector Database Integration
 - Retrieval-Augmented Generation (RAG)
 - AI Resume Generator
