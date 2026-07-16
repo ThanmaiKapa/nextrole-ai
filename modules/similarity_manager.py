@@ -1,15 +1,5 @@
-import json
-from pathlib import Path
-
-from sklearn.metrics.pairwise import cosine_similarity
-from langchain_ollama import OllamaEmbeddings
-
-EMBEDDINGS_PATH = Path("data/profile_embeddings.json")
-
-embedding_model = OllamaEmbeddings(
-    model="nomic-embed-text"
-)
-
+from modules.chroma_manager import collection
+from modules.embedding_manager import embedding_model
 
 def similarity_search(query, top_k=3):
     """
@@ -25,43 +15,16 @@ def similarity_search(query, top_k=3):
 
     Returns
     -------
-    list
-        Top matching chunks sorted by cosine similarity.
+    dict
+        Top matching profile chunks retrieved from ChromaDB.
     """
-
-    if not EMBEDDINGS_PATH.exists():
-        return []
-
-    with open(EMBEDDINGS_PATH, "r", encoding="utf-8") as file:
-        embedded_chunks = json.load(file)
-
-    if not embedded_chunks:
-        return []
 
     # Generate embedding for the query
     query_embedding = embedding_model.embed_query(query)
 
-    results = []
-
-    for chunk in embedded_chunks:
-
-        score = cosine_similarity(
-            [query_embedding],
-            [chunk["embedding"]]
-        )[0][0]
-
-        results.append(
-            {
-                "id": chunk["id"],
-                "section": chunk["section"],
-                "text": chunk["text"],
-                "similarity_score": float(score)
-            }
-        )
-
-    results.sort(
-        key=lambda x: x["similarity_score"],
-        reverse=True
+    results=collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        include=["metadatas", "documents", "distances"]
     )
-
-    return results[:top_k]
+    return results

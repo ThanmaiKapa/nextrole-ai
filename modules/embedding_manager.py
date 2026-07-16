@@ -3,6 +3,7 @@ from modules.profile_manager import load_profile
 from modules.chunk_manager import create_chunks
 import json
 from pathlib import Path
+from modules.chroma_manager import update_chroma_collection
 
 EMBEDDINGS_PATH = Path("data/profile_embeddings.json")
 
@@ -43,23 +44,11 @@ def generate_embeddings(chunks):
 
     return embedded_chunks
 
-def save_embeddings(embedded_chunks):
-    """
-    Save the embedded chunks to a JSON file.
-    """
-    
-    if not embedded_chunks:
-        return
-    
-    EMBEDDINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(EMBEDDINGS_PATH, "w", encoding="utf-8") as file:
-        json.dump(embedded_chunks, file, indent=4)
-
 def update_profile_embeddings():
 
     """
     Load the latest Master Profile, regenerate chunks,
-    create embeddings, and save them locally.
+    create embeddings, and update the ChromaDB collection.
     """
 
     profile = load_profile()
@@ -71,4 +60,4 @@ def update_profile_embeddings():
 
     embedded_chunks = generate_embeddings(chunks)
 
-    save_embeddings(embedded_chunks)
+    update_chroma_collection(embedded_chunks)

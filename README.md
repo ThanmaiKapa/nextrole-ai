@@ -44,9 +44,17 @@ NextRole AI aims to solve this problem by analyzing a resume against a job descr
 - Convert Master Profile into meaningful text chunks
 - Generate embeddings using nomic-embed-text
 - Automatically regenerate embeddings whenever the profile is updated
-- Store profile embeddings locally
-- Semantic similarity search using cosine similarity
+- Generate embeddings using nomic-embed-text
+- Automatically regenerate embeddings whenever the profile is updated
 - Retrieve the most relevant profile information for a job description
+
+### 🗄️ ChromaDB Integration
+
+- Store profile embeddings in a persistent ChromaDB collection
+- Organize embeddings using collections, documents, IDs, and metadata
+- Automatically update the vector database whenever the Master Profile changes
+- Perform semantic retrieval using ChromaDB nearest-neighbor search
+- Eliminate manual cosine similarity computation
 
 ### ⚡ General
 - Runs completely locally using Ollama
@@ -55,7 +63,7 @@ NextRole AI aims to solve this problem by analyzing a resume against a job descr
 
 ## Why Local LLM?
 
-NextRole AI runs entirely on a local Llama 3.2 model through Ollama. This allows the application to:
+NextRole AI runs entirely on local AI models through Ollama, using Llama 3.2 for language generation and nomic-embed-text for embedding generation.
 
 - Run without an internet connection
 - Avoid API costs
@@ -64,17 +72,19 @@ NextRole AI runs entirely on a local Llama 3.2 model through Ollama. This allows
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Frontend | Streamlit |
-| Backend | Python |
-| AI Framework | LangChain |
-| LLM | Llama 3.2 |
-| Embedding Model | nomic-embed-text|
-| Local Runtime | Ollama |
+| Component        | Technology         |
+| ---------------- | ------------------ |
+| Frontend         | Streamlit          |
+| Backend          | Python             |
+| AI Framework     | LangChain          |
+| LLM              | Llama 3.2          |
+| Embedding Model  | nomic-embed-text   |
+| Vector Database  | ChromaDB           |
+| Local Runtime    | Ollama             |
 | Document Parsing | pypdf, python-docx |
-| IDE | VS Code |
-| Data Storage | JSON |
+| IDE              | VS Code            |
+| Data Storage     | JSON, ChromaDB     |
+
 
 ## Project Structure
 ```
@@ -84,7 +94,7 @@ NextRole_AI/
 │
 ├── data/
 │   ├── master_profile.json
-│   └── profile_embeddings.json
+│   └── chroma_db/
 │
 ├── forms/
 │   ├── personal_information_form.py
@@ -99,6 +109,7 @@ NextRole_AI/
 │   ├── chunk_manager.py
 │   ├── embedding_manager.py
 │   ├── profile_manager.py
+│   ├── chroma_manager.py
 │   └── similarity_manager.py
 │
 ├── prompts/
@@ -129,6 +140,7 @@ Before running the project, ensure you have:
 - Git
 - Ollama installed
 - Llama 3.2 downloaded
+- nomic-embed-text downloaded
 
 ## Installation
 
@@ -239,7 +251,7 @@ Paste Job Description      Store Master Profile (JSON)
       LangChain             Generate Embeddings
           │                         │
           ▼                         ▼
-       Ollama              Store Embeddings (JSON)
+       Ollama                 Update chromadb
           │
           ▼
       Llama 3.2
@@ -256,7 +268,7 @@ Paste Job Description      Store Master Profile (JSON)
 - [x] Version 1.0 - ATS Resume Analyzer
 - [x] Version 2.0 - Master Profile
 - [x] Version 3.0 - Embeddings
-- [ ] Version 4.0 - ChromaDB
+- [x] Version 4.0 - ChromaDB
 - [ ] Version 5.0 - RAG
 - [ ] Version 6.0 - AI Resume Generator
 - [ ] Version 7.0 - Cover Letter Generator
@@ -266,13 +278,12 @@ Paste Job Description      Store Master Profile (JSON)
 
 🚧 Active Development
 
-Current Version: **v3.0**
+Current Version: **v4.0**
 
-The project currently includes an ATS Resume Analyzer, Master Profile, automatic profile embedding generation, and semantic similarity search. Upcoming versions will introduce ChromaDB, Retrieval-Augmented Generation (RAG), AI Resume Generation, Cover Letter Generation, and Interview Preparation.
+The project currently includes an ATS Resume Analyzer, Master Profile, automatic profile embedding generation, semantic similarity search, and ChromaDB-powered vector storage and retrieval. Upcoming versions will introduce Retrieval-Augmented Generation (RAG), AI Resume Generation, Cover Letter Generation, and Interview Preparation.
 
 ## Future Enhancements
 
-- ChromaDB Vector Database Integration
 - Retrieval-Augmented Generation (RAG)
 - AI Resume Generator
 - Cover Letter Generator
