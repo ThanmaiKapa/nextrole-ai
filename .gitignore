@@ -219,3 +219,6 @@ __marimo__/
 
 # ChromaDB
 data/chroma_db/
+
+# Master Profile
+data/master_profile.json

@@ -12,41 +12,46 @@ An AI-powered career assistant built with Streamlit, LangChain, Ollama, and Llam
 
 Professionals often apply for multiple job roles, but a single resume cannot effectively represent every skill, project, and experience. As a result, resumes frequently receive low ATS scores because important skills relevant to a specific job description are missing.
 
-NextRole AI aims to solve this problem by analyzing a resume against a job description and providing ATS-style feedback, missing skills, strengths, weaknesses, and actionable recommendations. Future versions will use a Master Profile and Retrieval-Augmented Generation (RAG) to intelligently recommend skills and projects that the user already possesses but has not included in the current resume.
+NextRole AI analyzes resumes against job descriptions using Retrieval-Augmented Generation (RAG). It retrieves relevant information from a reusable Master Profile, validates AI-generated responses, and provides accurate ATS-style feedback with strengths, missing skills, weaknesses, and actionable recommendations.
 
 ## Features
 
 ### 📄 ATS Resume Analyzer
+
 - Upload resumes in PDF and DOCX formats
 - Extract resume text automatically
 - Paste any job description
 - Analyze resumes using Llama 3.2
-- Generate ATS compatibility score
+- Retrieval-Augmented ATS Analysis (RAG)
+- Generate ATS compatibility and ATS quality scores
 - Identify matching skills
+- Identify additional relevant skills from the Master Profile
 - Identify missing skills
-- Suggest resume improvements
+- Identify weaknesses
+- Generate actionable improvement recommendations
+- Provide an overall candidate recommendation
+- Validate AI-generated responses using a post-processing pipeline
 
 ### 👤 Master Profile
+
 - Create and maintain a reusable professional profile
 - Edit previously saved information
 - View profile in a structured format
-- Multiple Education entries
-- Multiple Experience entries
-- Multiple Projects
-- Multiple Certifications
-- Skills management
+- Support multiple Education entries
+- Support multiple Experience entries
+- Support multiple Projects
+- Support multiple Certifications
+- Manage technical and professional skills
 - Section-wise saving
 - Input validation
 - JSON-based local storage
 
 ### 🧠 Embeddings & Semantic Search
 
-- Convert Master Profile into meaningful text chunks
-- Generate embeddings using nomic-embed-text
+- Convert the Master Profile into meaningful text chunks
+- Generate embeddings using **nomic-embed-text**
 - Automatically regenerate embeddings whenever the profile is updated
-- Generate embeddings using nomic-embed-text
-- Automatically regenerate embeddings whenever the profile is updated
-- Retrieve the most relevant profile information for a job description
+- Retrieve the most relevant profile information for a given job description
 
 ### 🗄️ ChromaDB Integration
 
@@ -55,6 +60,15 @@ NextRole AI aims to solve this problem by analyzing a resume against a job descr
 - Automatically update the vector database whenever the Master Profile changes
 - Perform semantic retrieval using ChromaDB nearest-neighbor search
 - Eliminate manual cosine similarity computation
+
+### 🤖 Intelligent ATS Analysis
+
+- Retrieval-Augmented Generation (RAG)
+- Response validation pipeline
+- Duplicate removal
+- Semantic skill validation
+- Recommendation validation
+- Overall recommendation generation
 
 ### ⚡ General
 - Runs completely locally using Ollama
@@ -105,11 +119,13 @@ NextRole_AI/
 │   └── certifications_form.py
 │
 ├── modules/
-│   ├── analyzer.py
+│   ├── ats_analyzer.py
 │   ├── chunk_manager.py
 │   ├── embedding_manager.py
 │   ├── profile_manager.py
 │   ├── chroma_manager.py
+│   ├── master_profile.py
+│   ├── validator.py
 │   └── similarity_manager.py
 │
 ├── prompts/
@@ -120,7 +136,7 @@ NextRole_AI/
 │   └── session_state.py
 │
 ├── views/
-│   ├── ats_analyzer.py
+│   ├── ats_analyzer_page.py
 │   ├── home.py
 │   ├── master_profile.py
 │   └── profile_view.py
@@ -175,7 +191,7 @@ pip install -r requirements.txt
 
 Visit **https://ollama.com** to Install
 
-7. Pull Llama 3.2
+7. Download Required Models
 ```bash
 ollama pull llama3.2
 ollama pull nomic-embed-text
@@ -245,22 +261,34 @@ streamlit run app.py
 Paste Job Description      Store Master Profile (JSON)
           │                         │
           ▼                         ▼
-    Build ATS Prompt        Generate Profile Chunks
-          │                         │
-          ▼                         ▼
-      LangChain             Generate Embeddings
-          │                         │
-          ▼                         ▼
-       Ollama                 Update chromadb
+ Retrieve Relevant         Generate Profile Chunks
+ Master Profile Context            │
+          │                        ▼
+          ▼                Generate Embeddings
+     Build ATS Prompt              │
+          │                        ▼
+          ▼                Update ChromaDB
+      LangChain
+          │
+          ▼
+       Ollama
           │
           ▼
       Llama 3.2
           │
           ▼
- Generate ATS Analysis
+ Generate Structured
+     ATS Analysis
           │
           ▼
-    Display Results
+ Validate AI Response
+          │
+          ▼
+ Generate Overall
+ Recommendation
+          │
+          ▼
+ Display ATS Report
 ```
 
 ## Roadmap
@@ -269,25 +297,22 @@ Paste Job Description      Store Master Profile (JSON)
 - [x] Version 2.0 - Master Profile
 - [x] Version 3.0 - Embeddings
 - [x] Version 4.0 - ChromaDB
-- [ ] Version 5.0 - RAG
+- [x] Version 5.0 - Retrieval-Augmented ATS Analysis
 - [ ] Version 6.0 - AI Resume Generator
 - [ ] Version 7.0 - Cover Letter Generator
-- [ ] Version 8.0 - Interview Preparation
 
 ## Project Status
 
 🚧 Active Development
 
-Current Version: **v4.0**
+Current Version: **v5.0**
 
-The project currently includes an ATS Resume Analyzer, Master Profile, automatic profile embedding generation, semantic similarity search, and ChromaDB-powered vector storage and retrieval. Upcoming versions will introduce Retrieval-Augmented Generation (RAG), AI Resume Generation, Cover Letter Generation, and Interview Preparation.
+The project currently includes an ATS Resume Analyzer, Master Profile management, automatic embedding generation, ChromaDB-powered semantic retrieval, Retrieval-Augmented Generation (RAG), and response validation for more accurate ATS analysis.
 
 ## Future Enhancements
 
-- Retrieval-Augmented Generation (RAG)
 - AI Resume Generator
 - Cover Letter Generator
-- Interview Preparation
 
 ## License
 

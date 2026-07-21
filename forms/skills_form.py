@@ -19,11 +19,11 @@ def skills_form(profile):
             key="skills_programming_languages"
         )
 
-        frameworks = st.text_area(
-            "Enter your frameworks (comma-separated)",
-            value=", ".join(skills.get("frameworks", [])),
+        frameworks_libraries = st.text_area(
+            "Enter your frameworks/libraries (comma-separated)",
+            value=", ".join(skills.get("frameworks/libraries", [])),
             placeholder="e.g., LangChain, Django, Flask",
-            key="skills_frameworks"
+            key="skills_frameworks/libraries"
         )
 
         databases = st.text_area(
@@ -54,6 +54,20 @@ def skills_form(profile):
             key="skills_soft_skills"
         )
 
+        generative_ai = st.text_area(
+            "Enter your Generative AI (comma-separated)",
+            value=", ".join(skills.get("generative_ai", [])),
+            placeholder="e.g., ChatGPT, DALL-E, MidJourney",
+            key="skills_generative_ai"
+        )
+
+        other_technical_skills = st.text_area(
+            "Enter any other technical skills (comma-separated)",
+            value=", ".join(skills.get("other_technical_skills", [])),
+            placeholder="e.g., Project Management, Agile, Scrum",
+            key="skills_other_technical_skills"
+        )
+
         st.divider()
 
         save = st.form_submit_button("💾 Save Skills Details")
@@ -62,11 +76,13 @@ def skills_form(profile):
 
             if (
                 not programming_languages.strip()
-                and not frameworks.strip()
+                and not frameworks_libraries.strip()
                 and not databases.strip()
                 and not cloud.strip()
                 and not tools.strip()
                 and not soft_skills.strip()
+                and not generative_ai.strip()
+                and not other_technical_skills.strip()
             ):
                 st.error("Please enter at least one skill.")
                 return
@@ -77,9 +93,9 @@ def skills_form(profile):
                     for lang in programming_languages.split(",")
                     if lang.strip()
                 ],
-                "frameworks": [
+                "frameworks/libraries": [
                     fw.strip()
-                    for fw in frameworks.split(",")
+                    for fw in frameworks_libraries.split(",")
                     if fw.strip()
                 ],
                 "databases": [
@@ -100,6 +116,16 @@ def skills_form(profile):
                 "soft_skills": [
                     skill.strip()
                     for skill in soft_skills.split(",")
+                    if skill.strip()
+                ],
+                "generative_ai": [
+                    tool.strip()
+                    for tool in generative_ai.split(",")
+                    if tool.strip()
+                ],
+                "other_technical_skills": [
+                    skill.strip()
+                    for skill in other_technical_skills.split(",")
                     if skill.strip()
                 ]
             }
