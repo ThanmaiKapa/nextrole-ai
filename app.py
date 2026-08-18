@@ -4,11 +4,12 @@ from langchain_ollama import ChatOllama
 
 from views.home import show_home
 from views.ats_analyzer_page import show_ats
-from views.master_profile import show_master_profile
+from views.master_profile_page import show_master_profile
+from views.resume_generator_page import resume_generator_page
 
 from utils.session_state import initialize_session_state
 
-llm = ChatOllama(model="llama3.2", temperature=0)
+llm = ChatOllama(model="llama3.2", temperature=0, format="json")
 
 st.set_page_config(
     page_title="NextRole AI",
@@ -25,7 +26,8 @@ page = st.sidebar.radio(
     [
         "🏠 Home",
         "📄 ATS Analyzer",
-        "👤 Master Profile"
+        "👤 Master Profile",
+        "📄 Resume Generator"
     ]
 )
 
@@ -37,3 +39,7 @@ elif page == "📄 ATS Analyzer":
 
 elif page == "👤 Master Profile":
     show_master_profile()
+
+elif page == "📄 Resume Generator":
+    resume_generator_page(llm)
+

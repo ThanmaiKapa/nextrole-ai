@@ -3,7 +3,10 @@
 def create_chunks(profile):
     """
     Convert the Master Profile into meaningful text chunks.
-    Each chunk represents one logical section of the profile.
+    Each chunk contains:
+    - text
+    - section
+    - project_type (only for projects)
     """
 
     chunks = []
@@ -33,17 +36,20 @@ def create_chunks(profile):
             personal_text += f"Portfolio: {personal['portfolio']}\n"
 
         if personal.get("summary"):
-            personal_text += f"\nProfessional Summary:\n{personal['summary']}"
+            personal_text += (
+                f"\nProfessional Summary:\n{personal['summary']}"
+            )
 
-        chunks.append(personal_text.strip())
+        chunks.append({
+            "text": personal_text.strip(),
+            "section": "Personal Information"
+        })
 
     # ==========================================================
     # Education
     # ==========================================================
 
-    education_list = profile.get("education", [])
-
-    for education in education_list:
+    for education in profile.get("education", []):
 
         education_text = "Education\n\n"
 
@@ -53,7 +59,6 @@ def create_chunks(profile):
             f"Board / University: {education.get('board_university', '')}\n"
         )
 
-        # Specialization is optional for SSC
         if education.get("specialization"):
             education_text += (
                 f"Specialization: {education['specialization']}\n"
@@ -70,30 +75,22 @@ def create_chunks(profile):
             f"{education.get('end_year', '')}"
         )
 
-        chunks.append(education_text.strip())
+        chunks.append({
+            "text": education_text.strip(),
+            "section": "Education"
+        })
 
     # ==========================================================
     # Experience
     # ==========================================================
 
-    experience_list = profile.get("experience", [])
-
-    for experience in experience_list:
+    for experience in profile.get("experience", []):
 
         experience_text = "Experience\n\n"
 
-        experience_text += (
-            f"Company: {experience.get('company', '')}\n"
-        )
-
-        experience_text += (
-            f"Role: {experience.get('role', '')}\n"
-        )
-
-        experience_text += (
-            f"Location: {experience.get('location', '')}\n"
-        )
-
+        experience_text += f"Company: {experience.get('company', '')}\n"
+        experience_text += f"Role: {experience.get('role', '')}\n"
+        experience_text += f"Location: {experience.get('location', '')}\n"
         experience_text += (
             f"Employment Type: "
             f"{experience.get('employment_type', '')}\n"
@@ -110,15 +107,17 @@ def create_chunks(profile):
                 f"End Date: {experience.get('end_date', '')}\n"
             )
 
-        description = experience.get("description", [])
+        if experience.get("description"):
 
-        if description:
             experience_text += "\nResponsibilities:\n"
 
-            for point in description:
+            for point in experience["description"]:
                 experience_text += f"- {point}\n"
 
-        chunks.append(experience_text.strip())
+        chunks.append({
+            "text": experience_text.strip(),
+            "section": "Experience"
+        })
 
     # ==========================================================
     # Skills
@@ -137,10 +136,10 @@ def create_chunks(profile):
                 + "\n"
             )
 
-        if skills.get("frameworks"):
+        if skills.get("frameworks/libraries"):
             skills_text += (
-                "Frameworks: "
-                + ", ".join(skills["frameworks"])
+                "Frameworks/Libraries: "
+                + ", ".join(skills["frameworks/libraries"])
                 + "\n"
             )
 
@@ -172,58 +171,66 @@ def create_chunks(profile):
                 + "\n"
             )
 
-        chunks.append(skills_text.strip())
+        if skills.get("generative_ai"):
+            skills_text += (
+                "Generative AI: "
+                + ", ".join(skills["generative_ai"])
+                + "\n"
+            )
+
+        if skills.get("other_technical_skills"):
+            skills_text += (
+                "Other Technical Skills: "
+                + ", ".join(skills["other_technical_skills"])
+                + "\n"
+            )
+
+        chunks.append({
+            "text": skills_text.strip(),
+            "section": "Skills"
+        })
 
     # ==========================================================
     # Projects
     # ==========================================================
 
-    project_list = profile.get("projects", [])
-
-    for project in project_list:
+    for project in profile.get("projects", []):
 
         project_text = "Project\n\n"
 
-        project_text += (
-            f"Title: {project.get('title', '')}\n"
-        )
-
+        project_text += f"Title: {project.get('title', '')}\n"
         project_text += (
             f"Project Type: {project.get('project_type', '')}\n"
         )
 
-        technologies = project.get("technologies", [])
-
-        if technologies:
+        if project.get("technologies"):
             project_text += (
                 "Technologies: "
-                + ", ".join(technologies)
+                + ", ".join(project["technologies"])
                 + "\n"
             )
 
-        description = project.get("description", [])
-
-        if description:
+        if project.get("description"):
 
             project_text += "\nDescription:\n"
 
-            for point in description:
+            for point in project["description"]:
                 project_text += f"- {point}\n"
 
         if project.get("github"):
-            project_text += (
-                f"\nGitHub: {project['github']}"
-            )
+            project_text += f"\nGitHub: {project['github']}"
 
-        chunks.append(project_text.strip())
-
+        chunks.append({
+            "text": project_text.strip(),
+            "section": "Project",
+            "project_type": project.get("project_type", ""),
+            "data": project          # <-- Preserve original JSON
+        })
     # ==========================================================
     # Certifications
     # ==========================================================
 
-    certification_list = profile.get("certifications", [])
-
-    for certification in certification_list:
+    for certification in profile.get("certifications", []):
 
         certification_text = "Certification\n\n"
 
@@ -255,6 +262,9 @@ def create_chunks(profile):
                 f"{certification['credential_url']}\n"
             )
 
-        chunks.append(certification_text.strip())
+        chunks.append({
+            "text": certification_text.strip(),
+            "section": "Certification"
+        })
 
     return chunks

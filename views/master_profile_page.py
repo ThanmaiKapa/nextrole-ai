@@ -67,14 +67,12 @@ def show_master_profile():
         st.write("""
 Create your Master Profile once.
 
-NextRole AI will use this information across all future features.
+NextRole AI will use this information across all features.
 """)
 
         st.markdown("""
 - ✅ ATS Resume Analyzer
 - ✅ Resume Generator
-- ✅ Cover Letter Generator
-- ✅ Interview Preparation
 """)
 
         st.divider()

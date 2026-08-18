@@ -1,7 +1,5 @@
 from langchain_ollama import OllamaEmbeddings
-from modules.profile_manager import load_profile
 from modules.chunk_manager import create_chunks
-import json
 from pathlib import Path
 from modules.chroma_manager import update_chroma_collection
 
@@ -12,44 +10,8 @@ embedding_model = OllamaEmbeddings(
 )
 
 
-def generate_embeddings(chunks):
-    """
-    Generate embeddings for all profile chunks.
-
-    Returns a list of dictionaries containing:
-    - id
-    - section
-    - text
-    - embedding
-    """
-
-    # Generate embeddings for all chunks at once
-    embeddings = embedding_model.embed_documents(chunks)
-
-    embedded_chunks = []
-
-    for index, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
-
-        # Determine section name
-        section = chunk.split("\n")[0].strip()
-
-        embedded_chunks.append(
-            {
-                "id": index + 1,
-                "section": section,
-                "text": chunk,
-                "embedding": embedding
-            }
-        )
-
-    return embedded_chunks
-
 def update_profile_embeddings():
-
-    """
-    Load the latest Master Profile, regenerate chunks,
-    create embeddings, and update the ChromaDB collection.
-    """
+    from modules.profile_manager import load_profile
 
     profile = load_profile()
 
@@ -61,3 +23,30 @@ def update_profile_embeddings():
     embedded_chunks = generate_embeddings(chunks)
 
     update_chroma_collection(embedded_chunks)
+
+
+def generate_embeddings(chunks):
+    """
+    Generate embeddings for all profile chunks.
+    """
+
+    texts = [chunk["text"] for chunk in chunks]
+
+    embeddings = embedding_model.embed_documents(texts)
+
+    embedded_chunks = []
+
+    for index, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+
+        embedded_chunk = {
+            "id": index + 1,
+            "section": chunk["section"],
+            "project_type": chunk.get("project_type", ""),
+            "text": chunk["text"],
+            "embedding": embedding,
+            "data": chunk.get("data")
+        }
+
+        embedded_chunks.append(embedded_chunk)
+
+    return embedded_chunks

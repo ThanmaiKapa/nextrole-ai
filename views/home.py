@@ -6,12 +6,8 @@ def show_home():
     st.write("""
     NextRole AI is your AI-powered career assistant.
 
-    Current Features:
+    Features:
     - ATS Resume Analyzer
-
-    Upcoming Features:
     - Master Profile
     - Resume Generator
-    - Cover Letter Generator
-    - Interview Preparation
     """)

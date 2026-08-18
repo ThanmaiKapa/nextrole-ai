@@ -1,6 +1,7 @@
 from pathlib import Path
 import chromadb
 from chromadb.config import Settings
+import json
 
 # -------------------------------------------------------
 # ChromaDB Configuration
@@ -27,23 +28,39 @@ collection = client.get_or_create_collection(
 # -------------------------------------------------------
 
 def update_chroma_collection(embedded_chunks):
-    """
-    Replace the existing Master Profile collection
-    with the latest profile embeddings.
-    """
 
     if not embedded_chunks:
         return
 
-    # Remove previous data
     existing = collection.get()
 
     if existing["ids"]:
-        collection.delete(
-            ids=existing["ids"]
-        )
+        collection.delete(ids=existing["ids"])
 
-    # Add latest profile
+    # ---------------- CREATE METADATA ----------------
+
+    metadatas = [
+        {
+            "section": chunk["section"],
+            "project_type": chunk["project_type"],
+            "data": json.dumps(chunk["data"])
+            if chunk.get("data") is not None
+            else ""
+        }
+        for chunk in embedded_chunks
+    ]
+
+    # ---------------- DEBUG 1 ----------------
+
+    print("\n================ FIRST PROJECT METADATA BEFORE STORE ================\n")
+
+    for metadata in metadatas:
+        if metadata["section"] == "Project":
+            print(metadata)
+            break
+
+    # ---------------- STORE ----------------
+
     collection.add(
         ids=[
             str(chunk["id"])
@@ -57,10 +74,5 @@ def update_chroma_collection(embedded_chunks):
             chunk["embedding"]
             for chunk in embedded_chunks
         ],
-        metadatas=[
-            {
-                "section": chunk["section"]
-            }
-            for chunk in embedded_chunks
-        ]
+        metadatas=metadatas
     )
